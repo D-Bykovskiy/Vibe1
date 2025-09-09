@@ -1,63 +1,96 @@
+# Импортируем необходимые модули для создания GUI
 import tkinter as tk
 from tkinter import ttk
 
 class ColorButton:
     def __init__(self):
+        # Создаем главное окно приложения
         self.root = tk.Tk()
-        self.root.title("Color Button")
-        self.root.geometry("300x200")
-        self.root.resizable(False, False)
+        self.root.title("Color Button")  # Заголовок окна
+        self.root.geometry("350x250")  # Увеличиваем размер окна для второй кнопки
+        self.root.resizable(False, False)  # Запрещаем изменение размера окна
         
-        # Configure the main frame
-        main_frame = ttk.Frame(self.root, padding="20")
-        main_frame.grid(row=0, column=0, sticky="nsew")
+        # Устанавливаем начальный цвет фона окна
+        self.root.configure(bg="white")
         
-        # Create the button
+        # Настраиваем главный фрейм для размещения элементов (используем tk.Frame вместо ttk.Frame)
+        main_frame = tk.Frame(self.root, bg="white")
+        main_frame.pack(expand=True, fill="both", padx=20, pady=20)
+        
+        # Создаем первую кнопку для изменения цвета самой кнопки
         self.button = tk.Button(
             main_frame,
-            text="Click Me!",
+            text="Цвет кнопки!",  # Изменяем текст на русский
             width=15,
-            height=3,
-            font=("Arial", 14, "bold"),
+            height=2,
+            font=("Arial", 12, "bold"),
             bg="lightgray",
             relief="raised",
             borderwidth=3
         )
-        self.button.grid(row=0, column=0, padx=20, pady=20)
+        self.button.pack(pady=10)
         
-        # Bind events
+        # Создаем вторую кнопку для изменения цвета фона окна
+        self.bg_button = tk.Button(
+            main_frame,
+            text="Цвет фона!",
+            width=15,
+            height=2,
+            font=("Arial", 12, "bold"),
+            bg="lightblue",
+            relief="raised",
+            borderwidth=3
+        )
+        self.bg_button.pack(pady=10)
+        
+        # Привязываем события к первой кнопке (изменение цвета кнопки)
         self.button.bind("<Button-1>", self.on_single_click)
         self.button.bind("<Double-Button-1>", self.on_double_click)
         
-        # Add instructions
+        # Привязываем события ко второй кнопке (изменение цвета фона)
+        self.bg_button.bind("<Button-1>", self.on_bg_single_click)
+        self.bg_button.bind("<Double-Button-1>", self.on_bg_double_click)
+        
+        # Добавляем инструкции для пользователя
         instructions = tk.Label(
             main_frame,
-            text="Single click = Green\nDouble click = Red",
-            font=("Arial", 10),
-            justify=tk.CENTER
+            text="Кнопка 'Цвет кнопки': 1 клик = Зеленая, 2 клика = Красная\nКнопка 'Цвет фона': 1 клик = Голубой фон, 2 клика = Желтый фон",
+            font=("Arial", 9),
+            justify=tk.CENTER,
+            wraplength=300  # Перенос текста
         )
-        instructions.grid(row=1, column=0, pady=10)
+        instructions.pack(pady=10)
         
-        # Configure grid weights
-        self.root.columnconfigure(0, weight=1)
-        self.root.rowconfigure(0, weight=1)
-        main_frame.columnconfigure(0, weight=1)
-        main_frame.rowconfigure(0, weight=1)
+        # Сохраняем ссылку на главный фрейм для изменения его цвета
+        self.main_frame = main_frame
     
     def on_single_click(self, event):
-        """Handle single click - change button to green"""
+        """Обработка одиночного клика - изменяем кнопку на зеленую"""
         self.button.config(bg="green", activebackground="darkgreen")
-        self.button.config(text="Green!")
+        self.button.config(text="Зеленая!")
     
     def on_double_click(self, event):
-        """Handle double click - change button to red"""
+        """Обработка двойного клика - изменяем кнопку на красную"""
         self.button.config(bg="red", activebackground="darkred")
-        self.button.config(text="Red!")
+        self.button.config(text="Красная!")
+    
+    def on_bg_single_click(self, event):
+        """Обработка одиночного клика по кнопке фона - меняем фон на голубой"""
+        self.root.configure(bg="lightblue")
+        self.main_frame.configure(bg="lightblue")  # Также меняем цвет фрейма
+        self.bg_button.config(text="Голубой фон!")
+    
+    def on_bg_double_click(self, event):
+        """Обработка двойного клика по кнопке фона - меняем фон на желтый"""
+        self.root.configure(bg="lightyellow")
+        self.main_frame.configure(bg="lightyellow")  # Также меняем цвет фрейма
+        self.bg_button.config(text="Желтый фон!")
     
     def run(self):
-        """Start the GUI application"""
+        """Запускаем GUI приложение"""
         self.root.mainloop()
 
+# Запускаем приложение, если файл выполняется напрямую
 if __name__ == "__main__":
-    app = ColorButton()
-    app.run()
+    app = ColorButton()  # Создаем экземпляр приложения
+    app.run()  # Запускаем главный цикл приложения
